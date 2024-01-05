@@ -8,7 +8,7 @@ namespace CurrencyFetcher.Application.Services
 {
     public interface IBankApi
     {
-        Task<Stream> GetRates(int periodicity, DateTime onDate);
+        Task<HttpResponseMessage> GetRatesAsync(int periodicity, DateTime onDate);
     }
 
     public class BankApi : IBankApi
@@ -21,7 +21,7 @@ namespace CurrencyFetcher.Application.Services
             _http.BaseAddress = new Uri("https://api.nbrb.by/exrates/");
         }
 
-        public async Task<Stream> GetRates(int periodicity, DateTime onDate)
+        public async Task<HttpResponseMessage> GetRatesAsync(int periodicity, DateTime onDate)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
             query["periodicity"] = periodicity.ToString();
@@ -32,7 +32,7 @@ namespace CurrencyFetcher.Application.Services
             var result = await _http.GetAsync(url);
             result.EnsureSuccessStatusCode();
 
-            return await result.Content.ReadAsStreamAsync();
+            return result;
         }
     }
 }
