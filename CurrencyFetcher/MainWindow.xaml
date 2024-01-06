@@ -1,12 +1,82 @@
 ﻿<Window x:Class="CurrencyFetcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CurrencyFetcher"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <DockPanel 
+        Margin="8">
+        <TextBlock
+            DockPanel.Dock="Top"
+            Margin="0,0,0,16"
+            FontSize="24"
+            FontWeight="Bold"
+            Text="Курсы валют"/>
+        <DockPanel
+            DockPanel.Dock="Top"
+            LastChildFill="False"
+            Margin="0,0,0,8">
+            <TextBlock
+                Margin="0,0,4,0"
+                FontSize="18"
+                Text="Период: c"/>
+            <telerik:RadDatePicker
+                Margin="0,0,4,0"/>
+            <TextBlock
+                Margin="0,0,4,0"
+                FontSize="18"
+                Text=", по"/>
+            <telerik:RadDatePicker
+                Margin="0,0,4,0"/>
+            <telerik:RadDropDownButton
+                DockPanel.Dock="Right"
+                Margin="4,0,0,0"
+                FontSize="14"
+                Content="Сохранить"
+                CloseOnPopupMouseLeftButtonUp="True">
+                <telerik:RadDropDownButton.DropDownContent>
+                    <ListBox>
+                        <ListBoxItem Content="Сохранить изменения" />
+                        <ListBoxItem Content="Сохранить как" />
+                    </ListBox>
+                </telerik:RadDropDownButton.DropDownContent>
+            </telerik:RadDropDownButton>
+            <telerik:RadDropDownButton
+                DockPanel.Dock="Right"
+                FontSize="14"
+                Content="Загрузить"
+                CloseOnPopupMouseLeftButtonUp="True">
+                <telerik:RadDropDownButton.DropDownContent>
+                    <ListBox>
+                        <ListBoxItem Content="Из API" />
+                        <ListBoxItem Content="Из JSON" />
+                    </ListBox>
+                </telerik:RadDropDownButton.DropDownContent>
+            </telerik:RadDropDownButton>
+        </DockPanel>
+        <telerik:RadTabControl
+            DockPanel.Dock="Top">
+            <telerik:RadTabControl.Items>
+                <telerik:RadTabItem 
+                    FontSize="14"
+                    Header="Таблица">
+                    <telerik:RadGridView
+                        ShowGroupPanel="False"
+                        AutoGenerateColumns="False">
+                        <telerik:RadGridView.Columns>
+                            <telerik:GridViewDataColumn Header="Дата"/>
+                            <telerik:GridViewDataColumn Header="Код"/>
+                            <telerik:GridViewDataColumn Header="Наименование"/>
+                            <telerik:GridViewDataColumn Header="Курс"/>
+                        </telerik:RadGridView.Columns>
+                    </telerik:RadGridView>
+                </telerik:RadTabItem>
+                <telerik:RadTabItem
+                    FontSize="14"
+                    Header="График"/>
+            </telerik:RadTabControl.Items>
+        </telerik:RadTabControl>
+    </DockPanel>
 </Window>
