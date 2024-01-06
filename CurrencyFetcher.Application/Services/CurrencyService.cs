@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CurrencyFetcher.Application.Helpers;
 using CurrencyFetcher.Application.Models;
+using CurrencyFetcher.Application.Services.Optimization;
 using Newtonsoft.Json;
 
 namespace CurrencyFetcher.Application.Services
@@ -16,15 +13,17 @@ namespace CurrencyFetcher.Application.Services
     public class CurrencyService
     {
         private const int MaxConcurrentTasks = 500;
-        private static readonly DateTime MinDate = new DateTime(1996, 1, 1);
+        private static readonly DateTime MinDate = new(1996, 1, 1);
 
         private readonly IBankApi _api;
         private readonly JsonSerializer _json;
+        private readonly IStringPool? _stringPool;
         
-        public CurrencyService(IBankApi api, JsonSerializer json)
+        public CurrencyService(IBankApi api, JsonSerializer json, IStringPool? stringPool)
         {
             _api = api;
             _json = json;
+            _stringPool = stringPool;
         }
 
         public async Task<IReadOnlyList<Currency>> GetCurrenciesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, CancellationToken cancellationToken = default)
@@ -68,11 +67,10 @@ namespace CurrencyFetcher.Application.Services
             await Task.WhenAll(continueTasks);
             
             var currencies = new List<Currency>();
-            var currencyNames = new ConcurrentDictionary<string, CurrencyName>();
-
+            
             foreach (var task in tasks)
             {
-                currencies.AddRange(await CurrencyServiceHelper.DeserializeCurrenciesAsync(_json, task.Result, currencyNames));
+                currencies.AddRange(await CurrencyServiceHelper.DeserializeCurrenciesAsync(_json, task.Result, _stringPool));
             }
             
             return currencies;
