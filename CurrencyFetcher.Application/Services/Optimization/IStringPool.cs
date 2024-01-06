@@ -2,6 +2,6 @@
 {
     public interface IStringPool
     {
-        string GetOrAdd(string value);
+        public string GetOrAdd(string value);
     }
 }

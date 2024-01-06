@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -8,7 +7,7 @@ namespace CurrencyFetcher.Application.Services
 {
     public interface IBankApi
     {
-        Task<HttpResponseMessage> GetRatesAsync(int periodicity, DateTime onDate);
+        public Task<HttpResponseMessage> GetRatesAsync(int periodicity, DateTime onDate);
     }
 
     public class BankApi : IBankApi
@@ -18,7 +17,6 @@ namespace CurrencyFetcher.Application.Services
         public BankApi(HttpClient http)
         {
             _http = http;
-            _http.BaseAddress = new Uri("https://api.nbrb.by/exrates/");
         }
 
         public async Task<HttpResponseMessage> GetRatesAsync(int periodicity, DateTime onDate)

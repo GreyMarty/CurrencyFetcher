@@ -4,7 +4,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:vm="clr-namespace:CurrencyFetcher.ViewModels"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:CurrencyRatesViewModel}"
         Title="MainWindow" Height="450" Width="800">
     <DockPanel 
         Margin="8">
@@ -23,13 +25,19 @@
                 FontSize="18"
                 Text="Период: c"/>
             <telerik:RadDatePicker
-                Margin="0,0,4,0"/>
+                Margin="0,0,4,0"
+                SelectableDateStart="{Binding MinDateFrom, UpdateSourceTrigger=PropertyChanged}"
+                SelectableDateEnd="{Binding MaxDateFrom, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValue="{Binding DateFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock
                 Margin="0,0,4,0"
                 FontSize="18"
                 Text=", по"/>
             <telerik:RadDatePicker
-                Margin="0,0,4,0"/>
+                Margin="0,0,4,0"
+                SelectableDateStart="{Binding MinDateTo, UpdateSourceTrigger=PropertyChanged}"
+                SelectableDateEnd="{Binding MaxDateTo, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValue="{Binding DateTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <telerik:RadDropDownButton
                 DockPanel.Dock="Right"
                 Margin="4,0,0,0"
@@ -62,16 +70,23 @@
                 <telerik:RadTabItem 
                     FontSize="14"
                     Header="Таблица">
-                    <telerik:RadGridView
-                        ShowGroupPanel="False"
-                        AutoGenerateColumns="False">
-                        <telerik:RadGridView.Columns>
-                            <telerik:GridViewDataColumn Header="Дата"/>
-                            <telerik:GridViewDataColumn Header="Код"/>
-                            <telerik:GridViewDataColumn Header="Наименование"/>
-                            <telerik:GridViewDataColumn Header="Курс"/>
-                        </telerik:RadGridView.Columns>
-                    </telerik:RadGridView>
+                    <DockPanel>
+                        <telerik:RadDataPager
+                            x:Name="pager"
+                            DockPanel.Dock="Bottom"/>
+                        <telerik:RadGridView
+                            DockPanel.Dock="Top"
+                            ShowGroupPanel="False"
+                            AutoGenerateColumns="False"
+                            ItemsSource="{Binding PagedSource, ElementName=pager}">
+                            <telerik:RadGridView.Columns>
+                                <telerik:GridViewDataColumn Header="Дата"/>
+                                <telerik:GridViewDataColumn Header="Код"/>
+                                <telerik:GridViewDataColumn Header="Наименование"/>
+                                <telerik:GridViewDataColumn Header="Курс"/>
+                            </telerik:RadGridView.Columns>
+                        </telerik:RadGridView>
+                    </DockPanel>
                 </telerik:RadTabItem>
                 <telerik:RadTabItem
                     FontSize="14"
