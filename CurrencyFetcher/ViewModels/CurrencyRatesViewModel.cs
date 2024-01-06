@@ -1,5 +1,7 @@
-﻿using CurrencyFetcher.Application.Services;
+﻿using CurrencyFetcher.Application.Models;
+using CurrencyFetcher.Application.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace CurrencyFetcher.ViewModels
@@ -15,6 +17,8 @@ namespace CurrencyFetcher.ViewModels
         public DateTime DateTo { get; set; } = DateTime.Now;
         public DateTime MinDateTo => DateFrom;
         public DateTime MaxDateTo { get; } = DateTime.Now;
+
+        public IReadOnlyList<CurrencyRate> Rates { get; set; } = Array.Empty<CurrencyRate>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using CurrencyFetcher.Application.Helpers;
 using CurrencyFetcher.Application.Models;
 using CurrencyFetcher.Application.Services.Optimization;
+using CurrencyFetcher.Application.Util;
 
 namespace CurrencyFetcher.Application.Services
 {
     public interface ICurrencyService
     {
-        public Task<IReadOnlyList<CurrencyRate>> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, CancellationToken cancellationToken = default);
+        public Task<IReadOnlyList<CurrencyRate>> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
     }
 
     public class CurrencyService : ICurrencyService
@@ -28,7 +29,7 @@ namespace CurrencyFetcher.Application.Services
             _stringPool = stringPool;
         }
 
-        public async Task<IReadOnlyList<CurrencyRate>> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<CurrencyRate>> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default)
         {
             if (dateFrom < MinDate)
             {
@@ -50,6 +51,9 @@ namespace CurrencyFetcher.Application.Services
                 throw new ArgumentException($"{nameof(periodDays)} must be greater or equal to 1.");
             }
 
+            var progressValue = CurrencyServiceHelper.EstimateProgress(dateFrom, dateTo, periodDays);
+            progress?.Report(progressValue);
+
             var tasks = new List<Task<HttpResponseMessage>>();
             var continueTasks = new List<Task>();
             var semaphore = new SemaphoreSlim(MaxConcurrentTasks, MaxConcurrentTasks);
@@ -59,7 +63,13 @@ namespace CurrencyFetcher.Application.Services
                 await semaphore.WaitAsync(cancellationToken);
 
                 var task = _api.GetRatesAsync(0, date);
-                var continueTask = task.ContinueWith(_ => semaphore.Release(), cancellationToken);
+                var continueTask = task.ContinueWith(_ => 
+                {
+                    semaphore.Release();
+                    progressValue.CurrentValue++;
+                    progress?.Report(progressValue);
+                },
+                cancellationToken);
 
                 tasks.Add(task);
                 continueTasks.Add(continueTask);
@@ -74,6 +84,11 @@ namespace CurrencyFetcher.Application.Services
             {
                 currencies.AddRange(await CurrencyServiceHelper.DeserializeCurrenciesAsync(task.Result, _stringPool));
             }
+
+            progressValue.CurrentValue = progressValue.TargetValue;
+            progress?.Report(progressValue);
+
+            currencies.Sort((a, b) => a.Date.CompareTo(b.Date));
 
             return currencies;
         }

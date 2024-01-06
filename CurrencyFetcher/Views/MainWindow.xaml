@@ -73,7 +73,8 @@
                     <DockPanel>
                         <telerik:RadDataPager
                             x:Name="pager"
-                            DockPanel.Dock="Bottom"/>
+                            DockPanel.Dock="Bottom"
+                            Source="{Binding Rates, UpdateSourceTrigger=PropertyChanged}"/>
                         <telerik:RadGridView
                             DockPanel.Dock="Top"
                             ShowGroupPanel="False"

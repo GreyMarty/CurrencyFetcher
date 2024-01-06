@@ -97,13 +97,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigureServices.cs" />
-    <Compile Include="Helpers\CurrencyServiceHelper.cs" />
+    <Compile Include="Util\Helpers\CurrencyServiceHelper.cs" />
     <Compile Include="Models\CurrencyRate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CurrencyService.cs" />
     <Compile Include="Services\BankApi.cs" />
     <Compile Include="Services\Optimization\InternalStringPool.cs" />
     <Compile Include="Services\Optimization\IStringPool.cs" />
+    <Compile Include="Util\SimpleProgress.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CurrencyFetcher.Application.Models;
 using CurrencyFetcher.Application.Services.Optimization;
+using CurrencyFetcher.Application.Util;
 
 namespace CurrencyFetcher.Application.Helpers
 {
@@ -29,6 +30,11 @@ namespace CurrencyFetcher.Application.Helpers
             }
 
             return currencies;
+        }
+
+        public static SimpleProgress EstimateProgress(DateTime dateFrom, DateTime dateTo, int periodDays)
+        {
+            return new SimpleProgress(0, (dateTo - dateFrom).Days / periodDays + 2);
         }
     }
 }
