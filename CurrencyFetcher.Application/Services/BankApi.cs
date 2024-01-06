@@ -20,18 +20,15 @@ namespace CurrencyFetcher.Application.Services
             _http = http;
         }
 
-        public async Task<HttpResponseMessage> GetRatesAsync(int periodicity, DateTime onDate, CancellationToken cancellationToken = default)
+        public Task<HttpResponseMessage> GetRatesAsync(int periodicity, DateTime onDate, CancellationToken cancellationToken = default)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
             query["periodicity"] = periodicity.ToString();
             query["ondate"] = onDate.ToString("yyyy-MM-dd");
             
             var url = $"rates?{query}";
-            
-            var result = await _http.GetAsync(url, cancellationToken);
-            result.EnsureSuccessStatusCode();
 
-            return result;
+            return _http.GetAsync(url, cancellationToken);
         }
     }
 }

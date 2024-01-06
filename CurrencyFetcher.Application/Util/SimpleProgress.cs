@@ -4,6 +4,7 @@
     {
         public float CurrentValue { get; set; }
         public float TargetValue { get; set; }
+        public bool Finished { get; set; }
 
         public SimpleProgress(float currentValue, float targetValue)
         {

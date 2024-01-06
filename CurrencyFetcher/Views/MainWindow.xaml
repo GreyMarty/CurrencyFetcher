@@ -15,7 +15,7 @@
             Margin="0,0,0,16"
             FontSize="24"
             FontWeight="Bold"
-            Text="Курсы валют"/>
+            Text="Курс валют"/>
         <DockPanel
             DockPanel.Dock="Top"
             LastChildFill="False"
@@ -74,6 +74,7 @@
                         <telerik:RadDataPager
                             x:Name="pager"
                             DockPanel.Dock="Bottom"
+                            PageSize="20"
                             Source="{Binding Rates, UpdateSourceTrigger=PropertyChanged}"/>
                         <telerik:RadGridView
                             DockPanel.Dock="Top"
@@ -81,10 +82,19 @@
                             AutoGenerateColumns="False"
                             ItemsSource="{Binding PagedSource, ElementName=pager}">
                             <telerik:RadGridView.Columns>
-                                <telerik:GridViewDataColumn Header="Дата"/>
-                                <telerik:GridViewDataColumn Header="Код"/>
-                                <telerik:GridViewDataColumn Header="Наименование"/>
-                                <telerik:GridViewDataColumn Header="Курс"/>
+                                <telerik:GridViewDataColumn 
+                                    Header="Дата"
+                                    DataMemberBinding="{Binding Date}"
+                                    DataFormatString="yyyy-MM-dd"/>
+                                <telerik:GridViewDataColumn 
+                                    Header="Код"
+                                    DataMemberBinding="{Binding Abbreviation}"/>
+                                <telerik:GridViewDataColumn 
+                                    Header="Наименование"
+                                    DataMemberBinding="{Binding Name}"/>
+                                <telerik:GridViewDataColumn 
+                                    Header="Курс"
+                                    DataMemberBinding="{Binding OfficialRate}"/>
                             </telerik:RadGridView.Columns>
                         </telerik:RadGridView>
                     </DockPanel>

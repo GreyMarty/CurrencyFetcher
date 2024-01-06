@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,38 +56,53 @@ namespace CurrencyFetcher.Application.Services
             var progressValue = CurrencyServiceHelper.EstimateProgress(dateFrom, dateTo, periodDays);
             progress?.Report(progressValue);
 
-            var tasks = new List<Task<HttpResponseMessage>>();
-            var continueTasks = new List<Task>();
-            var semaphore = new SemaphoreSlim(MaxConcurrentTasks, MaxConcurrentTasks);
+            var tasks = new List<Task>();
+            var results = new ConcurrentBag<HttpResponseMessage>();
+
+            using var semaphore = new SemaphoreSlim(MaxConcurrentTasks, MaxConcurrentTasks);
 
             for (var date = dateFrom; date <= dateTo; date = date.AddDays(periodDays))
             {
-                await semaphore.WaitAsync(cancellationToken);
-
-                var task = _api.GetRatesAsync(0, date);
-                var continueTask = task.ContinueWith(_ => 
+                try
                 {
+                    await semaphore.WaitAsync(cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+
+                var task = _api.GetRatesAsync(0, date, cancellationToken).ContinueWith(t => 
+                {
+                    if (!t.IsCanceled && !t.IsFaulted)
+                    {
+                        results.Add(t.Result);
+                    }
+
                     semaphore.Release();
                     progressValue.CurrentValue++;
                     progress?.Report(progressValue);
-                },
-                cancellationToken);
+                }, cancellationToken);
 
                 tasks.Add(task);
-                continueTasks.Add(continueTask);
             }
 
-            await Task.WhenAll(tasks);
-            await Task.WhenAll(continueTasks);
+            await Task.WhenAll(tasks.Where(t => !t.IsCanceled));
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Array.Empty<CurrencyRate>();
+            }
 
             var currencies = new List<CurrencyRate>();
 
-            foreach (var task in tasks)
+            foreach (var result in results)
             {
-                currencies.AddRange(await CurrencyServiceHelper.DeserializeCurrenciesAsync(task.Result, _stringPool));
+                currencies.AddRange(await CurrencyServiceHelper.DeserializeCurrenciesAsync(result, _stringPool));
             }
 
             progressValue.CurrentValue = progressValue.TargetValue;
+            progressValue.Finished = true;
             progress?.Report(progressValue);
 
             currencies.Sort((a, b) => a.Date.CompareTo(b.Date));
