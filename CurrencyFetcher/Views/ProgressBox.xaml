@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CurrencyFetcher.Views"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         xmlns:vm="clr-namespace:CurrencyFetcher.ViewModels"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -15,40 +14,40 @@
         WindowStyle="None">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding ClosingCommand}"/>
+            <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="Unloaded">
-            <i:InvokeCommandAction Command="{Binding UnloadedCommand}"/>
+            <i:InvokeCommandAction Command="{Binding UnloadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <StackPanel
         Margin="4">
-        <TextBlock 
+        <TextBlock
             Margin="0,0,0,4"
             FontSize="14">
-            <Run Text="Загрузка... "/>
-            <Run Text="{Binding PercentageText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Run Text="Загрузка... " />
+            <Run Text="{Binding PercentageText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </TextBlock>
         <telerik:RadProgressBar
             Margin="0,0,0,8"
             IsIndeterminate="{Binding IsIndeterminate, UpdateSourceTrigger=PropertyChanged}"
             Minimum="0"
             Maximum="{Binding Path=TargetValue, UpdateSourceTrigger=PropertyChanged}"
-            Value="{Binding Path=CurrentValue, UpdateSourceTrigger=PropertyChanged}"/>
+            Value="{Binding Path=CurrentValue, UpdateSourceTrigger=PropertyChanged}" />
         <Grid>
-            <TextBlock 
+            <TextBlock
                 VerticalAlignment="Top"
                 Text="Загрузка завершена"
-                Visibility="{Binding FinishedLabelVisibility, UpdateSourceTrigger=PropertyChanged}"/>
+                Visibility="{Binding FinishedLabelVisibility, UpdateSourceTrigger=PropertyChanged}" />
             <telerik:RadButton
                 Padding="4"
                 Width="64"
                 HorizontalAlignment="Right"
                 Content="{Binding CloseButtonText, UpdateSourceTrigger=PropertyChanged}"
-                Command="{Binding CloseCommand}"/>
+                Command="{Binding CloseCommand}" />
         </Grid>
     </StackPanel>
 </Window>

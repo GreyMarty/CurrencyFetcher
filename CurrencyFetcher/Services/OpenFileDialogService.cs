@@ -4,10 +4,12 @@ namespace CurrencyFetcher.Services;
 
 public interface IOpenFileDialogService : IFileDialogService
 {
-    
 }
 
 public class OpenFileDialogService : FileDialogServiceBase, IOpenFileDialogService
 {
-    protected override FileDialog CreateDialog() => new OpenFileDialog();
+    protected override FileDialog CreateDialog()
+    {
+        return new OpenFileDialog();
+    }
 }

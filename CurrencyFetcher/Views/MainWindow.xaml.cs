@@ -3,23 +3,23 @@ using CurrencyFetcher.Application.Services;
 using CurrencyFetcher.Services;
 using CurrencyFetcher.ViewModels;
 
-namespace CurrencyFetcher.Views
+namespace CurrencyFetcher.Views;
+
+/// <summary>
+///     Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    private readonly CurrencyRatesViewModel _viewModel;
+
+    public MainWindow(ICurrencyService currencyService, ISaveFileDialogService saveFileDialogService,
+        IOpenFileDialogService openFileDialogService)
     {
-        private readonly CurrencyRatesViewModel _viewModel;
+        _viewModel = new CurrencyRatesViewModel(currencyService, saveFileDialogService, openFileDialogService);
+        DataContext = _viewModel;
 
-        public MainWindow(ICurrencyService currencyService, ISaveFileDialogService saveFileDialogService, IOpenFileDialogService openFileDialogService)
-        {
-            _viewModel = new CurrencyRatesViewModel(currencyService, saveFileDialogService, openFileDialogService);
-            DataContext = _viewModel;
+        _viewModel.ExecuteTaskRequested += w => ProgressBox.ExecuteTask(w, this);
 
-            _viewModel.ExecuteTaskRequested += w => ProgressBox.ExecuteTask(w, this);
-            
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -8,5 +8,8 @@ public interface ISaveFileDialogService : IFileDialogService
 
 public class SaveFileDialogServiceService : FileDialogServiceBase, ISaveFileDialogService
 {
-    protected override FileDialog CreateDialog() => new SaveFileDialog();
+    protected override FileDialog CreateDialog()
+    {
+        return new SaveFileDialog();
+    }
 }

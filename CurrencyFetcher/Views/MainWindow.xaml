@@ -10,14 +10,14 @@
         d:DataContext="{d:DesignInstance Type=vm:CurrencyRatesViewModel}"
         Title="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
         Height="450" Width="800">
-    <DockPanel 
+    <DockPanel
         Margin="8">
         <TextBlock
             DockPanel.Dock="Top"
             Margin="0,0,0,16"
             FontSize="24"
             FontWeight="Bold"
-            Text="Курс валют"/>
+            Text="Курс валют" />
         <DockPanel
             DockPanel.Dock="Top"
             LastChildFill="False"
@@ -25,21 +25,21 @@
             <TextBlock
                 Margin="0,0,4,0"
                 FontSize="18"
-                Text="Период: c"/>
+                Text="Период: c" />
             <telerik:RadDatePicker
                 Margin="0,0,4,0"
                 SelectableDateStart="{Binding MinDateFrom, UpdateSourceTrigger=PropertyChanged}"
                 SelectableDateEnd="{Binding MaxDateFrom, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValue="{Binding DateFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                SelectedValue="{Binding DateFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
                 Margin="0,0,4,0"
                 FontSize="18"
-                Text=", по"/>
+                Text=", по" />
             <telerik:RadDatePicker
                 Margin="0,0,4,0"
                 SelectableDateStart="{Binding MinDateTo, UpdateSourceTrigger=PropertyChanged}"
                 SelectableDateEnd="{Binding MaxDateTo, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValue="{Binding DateTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                SelectedValue="{Binding DateTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <telerik:RadDropDownButton
                 DockPanel.Dock="Right"
                 Margin="4,0,0,0"
@@ -53,14 +53,14 @@
                             Content="Сохранить изменения">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding SaveChangesCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding SaveChangesCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBoxItem>
                         <ListBoxItem Content="Сохранить как">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding SaveToFileCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding SaveToFileCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBoxItem>
@@ -77,14 +77,14 @@
                         <ListBoxItem Content="Из API">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding LoadFromApiCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding LoadFromApiCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBoxItem>
                         <ListBoxItem Content="Из JSON">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding LoadFromFileCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding LoadFromFileCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBoxItem>
@@ -95,7 +95,7 @@
         <telerik:RadTabControl
             DockPanel.Dock="Top">
             <telerik:RadTabControl.Items>
-                <telerik:RadTabItem 
+                <telerik:RadTabItem
                     FontSize="14"
                     Header="Таблица">
                     <DockPanel>
@@ -103,7 +103,7 @@
                             x:Name="Pager"
                             DockPanel.Dock="Bottom"
                             PageSize="20"
-                            Source="{Binding Rates, UpdateSourceTrigger=PropertyChanged}"/>
+                            Source="{Binding Rates, UpdateSourceTrigger=PropertyChanged}" />
                         <telerik:RadGridView
                             DockPanel.Dock="Top"
                             ShowGroupPanel="False"
@@ -111,32 +111,32 @@
                             CanUserDeleteRows="False"
                             ItemsSource="{Binding PagedSource, ElementName=Pager}">
                             <telerik:RadGridView.Columns>
-                                <telerik:GridViewDataColumn 
+                                <telerik:GridViewDataColumn
                                     Header="Дата"
                                     DataMemberBinding="{Binding Date}"
                                     DataFormatString="yyyy-MM-dd"
-                                    IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn 
+                                    IsReadOnly="True" />
+                                <telerik:GridViewDataColumn
                                     Header="Код"
-                                    DataMemberBinding="{Binding Abbreviation}"/>
-                                <telerik:GridViewDataColumn 
+                                    DataMemberBinding="{Binding Abbreviation}" />
+                                <telerik:GridViewDataColumn
                                     Header="Наименование"
                                     DataMemberBinding="{Binding Name}"
-                                    IsReadOnly="True"/>
+                                    IsReadOnly="True" />
                                 <telerik:GridViewDataColumn
                                     Header="Кол-во"
                                     DataMemberBinding="{Binding Scale}"
-                                    IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn 
+                                    IsReadOnly="True" />
+                                <telerik:GridViewDataColumn
                                     Header="Курс"
-                                    DataMemberBinding="{Binding OfficialRate}"/>
+                                    DataMemberBinding="{Binding OfficialRate}" />
                             </telerik:RadGridView.Columns>
                         </telerik:RadGridView>
                     </DockPanel>
                 </telerik:RadTabItem>
                 <telerik:RadTabItem
                     FontSize="14"
-                    Header="График"/>
+                    Header="График" />
             </telerik:RadTabControl.Items>
         </telerik:RadTabControl>
     </DockPanel>

@@ -16,7 +16,7 @@ public abstract class FileDialogServiceBase : IFileDialogService
     {
         var dialog = CreateDialog();
         dialog.Filter = options?.Filter ?? dialog.Filter;
-        
+
         var result = dialog.ShowDialog();
         Path = dialog.FileName;
 
