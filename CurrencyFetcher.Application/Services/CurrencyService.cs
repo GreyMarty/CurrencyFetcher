@@ -14,7 +14,7 @@ namespace CurrencyFetcher.Application.Services
 {
     public interface ICurrencyService
     {
-        public Task<IReadOnlyList<CurrencyRate>> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
+        public Task<IReadOnlyList<CurrencyRate>?> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
     }
 
     public class CurrencyService : ICurrencyService
@@ -25,13 +25,13 @@ namespace CurrencyFetcher.Application.Services
         private readonly IBankApi _api;
         private readonly IStringPool? _stringPool;
 
-        public CurrencyService(IBankApi api, IStringPool? stringPool)
+        public CurrencyService(IBankApi api, IStringPool? stringPool = null)
         {
             _api = api;
             _stringPool = stringPool;
         }
 
-        public async Task<IReadOnlyList<CurrencyRate>> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<CurrencyRate>?> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default)
         {
             if (dateFrom < MinDate)
             {
@@ -91,7 +91,7 @@ namespace CurrencyFetcher.Application.Services
 
             if (cancellationToken.IsCancellationRequested)
             {
-                return Array.Empty<CurrencyRate>();
+                return null;
             }
 
             var currencies = new List<CurrencyRate>();

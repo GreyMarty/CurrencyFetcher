@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using CurrencyFetcher.Application.Util;
+using Telerik.Windows.Controls;
 
 namespace CurrencyFetcher.ViewModels
 {
@@ -23,12 +25,27 @@ namespace CurrencyFetcher.ViewModels
 
         public IReadOnlyList<CurrencyRate> Rates { get; set; } = Array.Empty<CurrencyRate>();
 
+        public ICommand LoadFromApiCommand { get; }
+        
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action<Func<IProgress<SimpleProgress>, CancellationToken, Task>>? ExecuteTaskRequested;
 
         public CurrencyRatesViewModel(ICurrencyService currencyService)
         {
             _currencyService = currencyService;
+
+            LoadFromApiCommand = new DelegateCommand(_ =>
+            {
+                ExecuteTaskRequested?.Invoke(async (progress, cancellationToken) =>
+                {
+                    var rates = await _currencyService.GetRatesAsync(DateFrom, DateTo, 1, progress, cancellationToken);
+
+                    if (rates is not null)
+                    {
+                        Rates = rates;
+                    }
+                });
+            });
         }
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         xmlns:vm="clr-namespace:CurrencyFetcher.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:CurrencyRatesViewModel}"
         Title="MainWindow" Height="450" Width="800">
@@ -58,7 +59,13 @@
                 CloseOnPopupMouseLeftButtonUp="True">
                 <telerik:RadDropDownButton.DropDownContent>
                     <ListBox>
-                        <ListBoxItem Content="Из API" />
+                        <ListBoxItem Content="Из API">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseUp">
+                                    <i:InvokeCommandAction Command="{Binding LoadFromApiCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBoxItem>
                         <ListBoxItem Content="Из JSON" />
                     </ListBox>
                 </telerik:RadDropDownButton.DropDownContent>
@@ -92,6 +99,9 @@
                                 <telerik:GridViewDataColumn 
                                     Header="Наименование"
                                     DataMemberBinding="{Binding Name}"/>
+                                <telerik:GridViewDataColumn
+                                    Header="Кол-во"
+                                    DataMemberBinding="{Binding Scale}"/>
                                 <telerik:GridViewDataColumn 
                                     Header="Курс"
                                     DataMemberBinding="{Binding OfficialRate}"/>
