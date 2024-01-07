@@ -92,16 +92,19 @@
                                 <telerik:GridViewDataColumn 
                                     Header="Дата"
                                     DataMemberBinding="{Binding Date}"
-                                    DataFormatString="yyyy-MM-dd"/>
+                                    DataFormatString="yyyy-MM-dd"
+                                    IsReadOnly="True"/>
                                 <telerik:GridViewDataColumn 
                                     Header="Код"
                                     DataMemberBinding="{Binding Abbreviation}"/>
                                 <telerik:GridViewDataColumn 
                                     Header="Наименование"
-                                    DataMemberBinding="{Binding Name}"/>
+                                    DataMemberBinding="{Binding Name}"
+                                    IsReadOnly="True"/>
                                 <telerik:GridViewDataColumn
                                     Header="Кол-во"
-                                    DataMemberBinding="{Binding Scale}"/>
+                                    DataMemberBinding="{Binding Scale}"
+                                    IsReadOnly="True"/>
                                 <telerik:GridViewDataColumn 
                                     Header="Курс"
                                     DataMemberBinding="{Binding OfficialRate}"/>
