@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using CurrencyFetcher.Views;
 
 namespace CurrencyFetcher
 {
@@ -21,8 +22,10 @@ namespace CurrencyFetcher
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            _mainWindow.Show();
             base.OnStartup(e);
+
+            MainWindow = _mainWindow;
+            _mainWindow.Show();
         }
     }
 }

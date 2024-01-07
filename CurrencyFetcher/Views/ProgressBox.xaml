@@ -6,13 +6,24 @@
         xmlns:local="clr-namespace:CurrencyFetcher.Views"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         xmlns:vm="clr-namespace:CurrencyFetcher.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:ProgressBoxViewModel, IsDesignTimeCreatable=True}"
         Title="Загрузка" Width="300"
         SizeToContent="Height"
-        Loaded="Window_Loaded"
-        Unloaded="Window_Unloaded"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding UnloadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <StackPanel
         Margin="4">
         <TextBlock 
@@ -36,7 +47,7 @@
                 Width="64"
                 HorizontalAlignment="Right"
                 Content="{Binding CloseButtonText, UpdateSourceTrigger=PropertyChanged}"
-                Click="Close_Click"/>
+                Command="{Binding CloseCommand}"/>
         </Grid>
     </StackPanel>
 </Window>

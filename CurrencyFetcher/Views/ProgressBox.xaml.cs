@@ -14,54 +14,24 @@ namespace CurrencyFetcher.Views
     {
         private readonly ProgressBoxViewModel _viewModel;
 
-        private readonly Func<IProgress<SimpleProgress>, CancellationToken, Task> _doWork;
-
-        private Task _task;
-        private CancellationTokenSource _cancellationTokenSource;
-
         private ProgressBox(Func<IProgress<SimpleProgress>, CancellationToken, Task> doWork)
         {
-            _doWork = doWork;
-
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            _viewModel = new ProgressBoxViewModel();
+            _viewModel = new ProgressBoxViewModel(doWork);
             DataContext = _viewModel;
+
+            _viewModel.CloseRequested += Close;
             
             InitializeComponent();
         }
 
-        public static bool? ExecuteTask(Func<IProgress<SimpleProgress>, CancellationToken, Task> doWork)
+        public static bool? ExecuteTask(Func<IProgress<SimpleProgress>, CancellationToken, Task> doWork, Window? owner = null)
         {
             var dialog = new ProgressBox(doWork);
-            return dialog.ShowDialog();
-        }
+            dialog.Owner = owner;
+            
+            var result = dialog.ShowDialog();
 
-        private async void Close_Click(object sender, RoutedEventArgs e)
-        {
-            _cancellationTokenSource.Cancel();
-
-            await _task;
-
-            DialogResult = _viewModel.Finished;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            var progress = new Progress<SimpleProgress>();
-            progress.ProgressChanged += (_, e) =>
-            {
-                _viewModel.CurrentValue = e.CurrentValue;
-                _viewModel.TargetValue = e.TargetValue;
-                _viewModel.Finished = e.Finished;
-            };
-
-            _task = _doWork(progress, _cancellationTokenSource.Token);
-        }
-
-        private void Window_Unloaded(object sender, RoutedEventArgs e)
-        {
-            _cancellationTokenSource?.Dispose();
+            return result;
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Configuration;
 using System.Net.Http;
+using CurrencyFetcher.Views;
 
 namespace CurrencyFetcher
 {
@@ -28,6 +29,7 @@ namespace CurrencyFetcher
                 .BuildServiceProvider();
 
             var app = services.GetRequiredService<App>();
+            app.InitializeComponent();
             app.Run();
         }
     }

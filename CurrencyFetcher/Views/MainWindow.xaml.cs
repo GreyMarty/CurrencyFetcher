@@ -1,8 +1,8 @@
-﻿using CurrencyFetcher.Application.Services;
+﻿using System.Windows;
+using CurrencyFetcher.Application.Services;
 using CurrencyFetcher.ViewModels;
-using System.Windows;
 
-namespace CurrencyFetcher
+namespace CurrencyFetcher.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -16,6 +16,8 @@ namespace CurrencyFetcher
             _viewModel = new CurrencyRatesViewModel(currencyService);
             DataContext = _viewModel;
 
+            _viewModel.ExecuteTaskRequested += w => ProgressBox.ExecuteTask(w, this);
+            
             InitializeComponent();
         }
     }
