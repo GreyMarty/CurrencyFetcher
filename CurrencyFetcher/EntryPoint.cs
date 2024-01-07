@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Configuration;
 using System.Net.Http;
+using CurrencyFetcher.Services;
 using CurrencyFetcher.Views;
 
 namespace CurrencyFetcher
@@ -26,6 +27,7 @@ namespace CurrencyFetcher
                 })
                 .AddApplicationServices()
                 .AddStringPool()
+                .AddScoped<ISaveFileDialogService, SaveFileDialogService>()
                 .BuildServiceProvider();
 
             var app = services.GetRequiredService<App>();

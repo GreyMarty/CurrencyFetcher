@@ -26,6 +26,9 @@ namespace CurrencyFetcher.Application.Util.Helpers
             {
                 var rates = DeserializeCurrencies(s, stringPool);
 
+                s.Close();
+                s.Dispose();
+                
                 lock (locker)
                 {
                     result.AddRange(rates);

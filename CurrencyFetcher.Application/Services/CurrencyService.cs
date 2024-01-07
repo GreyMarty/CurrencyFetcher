@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CurrencyFetcher.Application.Models;
@@ -15,6 +17,7 @@ namespace CurrencyFetcher.Application.Services
     public interface ICurrencyService
     {
         public Task<IReadOnlyList<CurrencyRate>?> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
+        public Task SaveToFileAsync(IEnumerable<CurrencyRate> rates, string path, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
     }
 
     public class CurrencyService : ICurrencyService
@@ -101,6 +104,34 @@ namespace CurrencyFetcher.Application.Services
             progress?.Report(progressValue);
 
             return currencies;
+        }
+
+        public async Task SaveToFileAsync(IEnumerable<CurrencyRate> rates, string path, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default)
+        {
+            var progressValue = new SimpleProgress(0, 1);
+            progress?.Report(progressValue);
+            
+            var directory = Path.GetDirectoryName(path);
+
+            if (directory is not null)
+            {
+                Directory.CreateDirectory(directory);
+            }
+            
+            using var stream = File.OpenWrite(path);
+
+            try
+            {
+                await JsonSerializer.SerializeAsync(stream, rates, cancellationToken: cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+            
+            progressValue.CurrentValue++;
+            progressValue.Finished = true;
+            progress?.Report(progressValue);
         }
     }
 }

@@ -121,6 +121,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Services\SaveFileDialogService.cs" />
     <Compile Include="ViewModels\ProgressBoxViewModel.cs" />
     <Compile Include="Views\ProgressBox.xaml.cs">
       <DependentUpon>ProgressBox.xaml</DependentUpon>
@@ -171,7 +172,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
