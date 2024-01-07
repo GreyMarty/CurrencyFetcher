@@ -79,7 +79,7 @@
                     Header="Таблица">
                     <DockPanel>
                         <telerik:RadDataPager
-                            x:Name="pager"
+                            x:Name="Pager"
                             DockPanel.Dock="Bottom"
                             PageSize="20"
                             Source="{Binding Rates, UpdateSourceTrigger=PropertyChanged}"/>
@@ -87,7 +87,7 @@
                             DockPanel.Dock="Top"
                             ShowGroupPanel="False"
                             AutoGenerateColumns="False"
-                            ItemsSource="{Binding PagedSource, ElementName=pager}">
+                            ItemsSource="{Binding PagedSource, ElementName=Pager}">
                             <telerik:RadGridView.Columns>
                                 <telerik:GridViewDataColumn 
                                     Header="Дата"

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CurrencyFetcher.Application.Helpers;
 using CurrencyFetcher.Application.Models;
 using CurrencyFetcher.Application.Services.Optimization;
 using CurrencyFetcher.Application.Util;
+using CurrencyFetcher.Application.Util.Helpers;
 
 namespace CurrencyFetcher.Application.Services
 {
@@ -53,7 +53,7 @@ namespace CurrencyFetcher.Application.Services
                 throw new ArgumentException($"{nameof(periodDays)} must be greater or equal to 1.");
             }
 
-            var progressValue = CurrencyServiceHelper.EstimateProgress(dateFrom, dateTo, periodDays);
+            var progressValue = CurrencyHelper.EstimateProgress(dateFrom, dateTo, periodDays);
             progress?.Report(progressValue);
 
             var tasks = new List<Task>();
@@ -94,18 +94,11 @@ namespace CurrencyFetcher.Application.Services
                 return null;
             }
 
-            var currencies = new List<CurrencyRate>();
-
-            foreach (var result in results)
-            {
-                currencies.AddRange(await CurrencyServiceHelper.DeserializeCurrenciesAsync(result, _stringPool));
-            }
+            var currencies = await CurrencyHelper.DeserializeCurrenciesManyAsync(results, _stringPool);
 
             progressValue.CurrentValue = progressValue.TargetValue;
             progressValue.Finished = true;
             progress?.Report(progressValue);
-
-            currencies.Sort((a, b) => a.Date.CompareTo(b.Date));
 
             return currencies;
         }
