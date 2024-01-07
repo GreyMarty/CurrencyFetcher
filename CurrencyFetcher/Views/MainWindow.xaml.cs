@@ -12,9 +12,9 @@ namespace CurrencyFetcher.Views
     {
         private readonly CurrencyRatesViewModel _viewModel;
 
-        public MainWindow(ICurrencyService currencyService, ISaveFileDialogService saveFileDialogService)
+        public MainWindow(ICurrencyService currencyService, ISaveFileDialogService saveFileDialogService, IOpenFileDialogService openFileDialogService)
         {
-            _viewModel = new CurrencyRatesViewModel(currencyService, saveFileDialogService);
+            _viewModel = new CurrencyRatesViewModel(currencyService, saveFileDialogService, openFileDialogService);
             DataContext = _viewModel;
 
             _viewModel.ExecuteTaskRequested += w => ProgressBox.ExecuteTask(w, this);

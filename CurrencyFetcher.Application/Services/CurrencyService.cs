@@ -18,6 +18,7 @@ namespace CurrencyFetcher.Application.Services
     {
         public Task<IReadOnlyList<CurrencyRate>?> GetRatesAsync(DateTime dateFrom, DateTime dateTo, int periodDays = 1, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
         public Task SaveToFileAsync(IEnumerable<CurrencyRate> rates, string path, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
+        public Task<IReadOnlyList<CurrencyRate>?> LoadFromFile(string path, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default);
     }
 
     public class CurrencyService : ICurrencyService
@@ -106,9 +107,25 @@ namespace CurrencyFetcher.Application.Services
             return currencies;
         }
 
+        public async Task<IReadOnlyList<CurrencyRate>?> LoadFromFile(string path, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default)
+        {
+            var progressValue = new SimpleProgress(0, 0);
+            progress?.Report(progressValue);
+
+            using var stream = File.OpenRead(path);
+            var result = await CurrencyHelper.DeserializeCurrenciesAsync(stream, _stringPool);
+
+            stream.Close();
+            
+            progressValue.Finished = true;
+            progress?.Report(progressValue);
+            
+            return result;
+        }
+        
         public async Task SaveToFileAsync(IEnumerable<CurrencyRate> rates, string path, IProgress<SimpleProgress>? progress = null, CancellationToken cancellationToken = default)
         {
-            var progressValue = new SimpleProgress(0, 1);
+            var progressValue = new SimpleProgress(0, 0);
             progress?.Report(progressValue);
             
             var directory = Path.GetDirectoryName(path);
@@ -123,13 +140,15 @@ namespace CurrencyFetcher.Application.Services
             try
             {
                 await JsonSerializer.SerializeAsync(stream, rates, cancellationToken: cancellationToken);
+                await stream.FlushAsync(cancellationToken);
             }
             catch (OperationCanceledException)
             {
                 return;
             }
             
-            progressValue.CurrentValue++;
+            stream.Close();
+            
             progressValue.Finished = true;
             progress?.Report(progressValue);
         }

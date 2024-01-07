@@ -14,34 +14,30 @@ namespace CurrencyFetcher.Application.Util.Helpers
     {
         public static async Task<IReadOnlyList<CurrencyRate>> DeserializeCurrenciesManyAsync(IEnumerable<HttpResponseMessage> responses, IStringPool? stringPool = null)
         {
-            var tasks = responses
-                .Select(r => r.Content.ReadAsStreamAsync())
-                .ToList();
-            await Task.WhenAll(tasks);
-
             var result = new List<CurrencyRate>();
             var locker = new object();
-            
-            Parallel.ForEach(tasks.Select(t => t.Result), s =>
-            {
-                var rates = DeserializeCurrencies(s, stringPool);
 
-                s.Close();
-                s.Dispose();
-                
-                lock (locker)
+            var tasks = responses
+                .Select(r => r.Content.ReadAsStreamAsync())
+                .Select(t => t.ContinueWith(async ct =>
                 {
-                    result.AddRange(rates);
-                }
-            });
-            
+                    using var stream = ct.Result;
+                    var rates = await DeserializeCurrenciesAsync(ct.Result, stringPool);
+
+                    lock (locker)
+                    {
+                        result.AddRange(rates);
+                    }
+                }));
+            await Task.WhenAll(tasks);
+
             result.Sort((a, b) => a.Date.CompareTo(b.Date));
             return result;
         }
         
-        public static IReadOnlyList<CurrencyRate> DeserializeCurrencies(Stream stream, IStringPool? stringPool = null)
+        public static async Task<IReadOnlyList<CurrencyRate>> DeserializeCurrenciesAsync(Stream stream, IStringPool? stringPool = null)
         {
-            var currencies = JsonSerializer.Deserialize<CurrencyRate[]>(stream) ?? throw new FormatException();
+            var currencies = await JsonSerializer.DeserializeAsync<CurrencyRate[]>(stream) ?? throw new FormatException();
 
             if (stringPool is null)
             {

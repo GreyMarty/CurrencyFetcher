@@ -27,7 +27,8 @@ namespace CurrencyFetcher
                 })
                 .AddApplicationServices()
                 .AddStringPool()
-                .AddScoped<ISaveFileDialogService, SaveFileDialogService>()
+                .AddScoped<ISaveFileDialogService, SaveFileDialogServiceService>()
+                .AddScoped<IOpenFileDialogService, OpenFileDialogService>()
                 .BuildServiceProvider();
 
             var app = services.GetRequiredService<App>();

@@ -2,19 +2,19 @@
 
 namespace CurrencyFetcher.Services;
 
-public interface ISaveFileDialogService
+public interface IFileDialogService
 {
     public string? Path { get; }
-    public bool? ShowDialog(SaveFileDialogOptions? options = null);
+    public bool? ShowDialog(FileDialogOptions? options = null);
 }
 
-public class SaveFileDialogService : ISaveFileDialogService
+public abstract class FileDialogServiceBase : IFileDialogService
 {
     public string? Path { get; private set; }
 
-    public bool? ShowDialog(SaveFileDialogOptions? options = null)
+    public bool? ShowDialog(FileDialogOptions? options = null)
     {
-        var dialog = new SaveFileDialog();
+        var dialog = CreateDialog();
         dialog.Filter = options?.Filter ?? dialog.Filter;
         
         var result = dialog.ShowDialog();
@@ -22,9 +22,11 @@ public class SaveFileDialogService : ISaveFileDialogService
 
         return result;
     }
+
+    protected abstract FileDialog CreateDialog();
 }
 
-public class SaveFileDialogOptions
+public class FileDialogOptions
 {
     public string? Filter { get; set; }
 }

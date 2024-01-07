@@ -14,10 +14,12 @@ namespace CurrencyFetcher.ViewModels
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         
         private Task? _task;
+
+        public bool IsIndeterminate => TargetValue == 0;
         
         public float CurrentValue { get; set; }
         public float TargetValue { get; set; }
-        public string PercentageText => $"{CurrentValue / (TargetValue + float.Epsilon) * 100:.#} %";
+        public string PercentageText => IsIndeterminate ? "" : $"{CurrentValue / TargetValue * 100:0.#} %";
 
         public bool Finished { get; set; }
         public Visibility FinishedLabelVisibility => Finished ? Visibility.Visible : Visibility.Collapsed;
@@ -42,6 +44,13 @@ namespace CurrencyFetcher.ViewModels
                     CurrentValue = e.CurrentValue;
                     TargetValue = e.TargetValue;
                     Finished = e.Finished;
+
+                    if (Finished && IsIndeterminate)
+                    {
+                        // 100% completion
+                        TargetValue = 1;
+                        CurrentValue = 1;
+                    }
                 };
 
                 _task = doWork(progress, _cancellationTokenSource.Token);
@@ -60,7 +69,7 @@ namespace CurrencyFetcher.ViewModels
                 }
             });
             
-            CloseCommand = new DelegateCommand(async _ =>
+            CloseCommand = new DelegateCommand(_ =>
             {
                 _cancellationTokenSource.Cancel();
                 CloseRequested?.Invoke();

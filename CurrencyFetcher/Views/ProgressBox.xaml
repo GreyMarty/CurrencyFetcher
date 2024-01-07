@@ -34,6 +34,7 @@
         </TextBlock>
         <telerik:RadProgressBar
             Margin="0,0,0,8"
+            IsIndeterminate="{Binding IsIndeterminate, UpdateSourceTrigger=PropertyChanged}"
             Minimum="0"
             Maximum="{Binding Path=TargetValue, UpdateSourceTrigger=PropertyChanged}"
             Value="{Binding Path=CurrentValue, UpdateSourceTrigger=PropertyChanged}"/>

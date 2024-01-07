@@ -8,7 +8,8 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:CurrencyRatesViewModel}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+        Height="450" Width="800">
     <DockPanel 
         Margin="8">
         <TextBlock
@@ -47,7 +48,15 @@
                 CloseOnPopupMouseLeftButtonUp="True">
                 <telerik:RadDropDownButton.DropDownContent>
                     <ListBox>
-                        <ListBoxItem Content="Сохранить изменения" />
+                        <ListBoxItem
+                            IsEnabled="{Binding CanSaveChanges, UpdateSourceTrigger=PropertyChanged}"
+                            Content="Сохранить изменения">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseUp">
+                                    <i:InvokeCommandAction Command="{Binding SaveChangesCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBoxItem>
                         <ListBoxItem Content="Сохранить как">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
@@ -72,7 +81,13 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBoxItem>
-                        <ListBoxItem Content="Из JSON" />
+                        <ListBoxItem Content="Из JSON">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseUp">
+                                    <i:InvokeCommandAction Command="{Binding LoadFromFileCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBoxItem>
                     </ListBox>
                 </telerik:RadDropDownButton.DropDownContent>
             </telerik:RadDropDownButton>
@@ -93,6 +108,7 @@
                             DockPanel.Dock="Top"
                             ShowGroupPanel="False"
                             AutoGenerateColumns="False"
+                            CanUserDeleteRows="False"
                             ItemsSource="{Binding PagedSource, ElementName=Pager}">
                             <telerik:RadGridView.Columns>
                                 <telerik:GridViewDataColumn 
