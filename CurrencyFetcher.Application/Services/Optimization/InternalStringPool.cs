@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace CurrencyFetcher.Application.Services.Optimization
+namespace CurrencyFetcher.Application.Services.Optimization;
+
+public class InternalStringPool : IStringPool
 {
-    public class InternalStringPool : IStringPool
+    public string GetOrAdd(string value)
     {
-        public string GetOrAdd(string value)
-        {
-            return String.Intern(value);
-        }
+        return String.Intern(value);
     }
 }

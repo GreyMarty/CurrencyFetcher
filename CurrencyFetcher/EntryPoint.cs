@@ -27,6 +27,7 @@ internal static class EntryPoint
             })
             .AddApplicationServices()
             .AddStringPool()
+            .AddPhysicalStorage()
             .AddScoped<ISaveFileDialogService, SaveFileDialogServiceService>()
             .AddScoped<IOpenFileDialogService, OpenFileDialogService>()
             .BuildServiceProvider();

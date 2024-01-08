@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿using CurrencyFetcher.Application.Models;
+using CurrencyFetcher.Application.Services;
+using CurrencyFetcher.Application.Util;
+using CurrencyFetcher.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CurrencyFetcher.Application.Models;
-using CurrencyFetcher.Application.Services;
-using CurrencyFetcher.Application.Util;
-using CurrencyFetcher.Services;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.ChartView;
 
@@ -17,8 +16,11 @@ namespace CurrencyFetcher.ViewModels;
 
 internal class CurrencyRatesViewModel : INotifyPropertyChanged
 {
-    public CurrencyRatesViewModel(ICurrencyService currencyService, ISaveFileDialogService saveFileDialogService,
-        IOpenFileDialogService openFileDialogService)
+    public CurrencyRatesViewModel(
+        ICurrencyService currencyService,
+        ISaveFileDialogService saveFileDialogService,
+        IOpenFileDialogService openFileDialogService,
+        IPhysicalStorage<IReadOnlyList<CurrencyRate>> currencyPhysicalStorage)
     {
         LoadFromApiCommand = new DelegateCommand(_ =>
         {
@@ -50,7 +52,7 @@ internal class CurrencyRatesViewModel : INotifyPropertyChanged
 
             ExecuteTaskRequested?.Invoke(async (progress, cancellationToken) =>
             {
-                var rates = await currencyService.LoadFromFile(path, progress, cancellationToken);
+                var rates = await currencyPhysicalStorage.LoadAsync(path, progress, cancellationToken);
 
                 if (rates is not null)
                 {
@@ -74,7 +76,7 @@ internal class CurrencyRatesViewModel : INotifyPropertyChanged
 
             ExecuteTaskRequested?.Invoke(async (progress, cancellationToken) =>
             {
-                await currencyService.SaveToFileAsync(Rates, saveFileDialogService.Path!, progress, cancellationToken);
+                await currencyPhysicalStorage.SaveAsync(Rates, saveFileDialogService.Path!, progress, cancellationToken);
                 ActiveFile = path;
             });
         });
@@ -89,7 +91,7 @@ internal class CurrencyRatesViewModel : INotifyPropertyChanged
 
             ExecuteTaskRequested?.Invoke(async (progress, cancellationToken) =>
             {
-                await currencyService.SaveToFileAsync(Rates, ActiveFile, progress, cancellationToken);
+                await currencyPhysicalStorage.SaveAsync(Rates, ActiveFile, progress, cancellationToken);
             });
         });
     }

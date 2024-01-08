@@ -1,15 +1,14 @@
-﻿namespace CurrencyFetcher.Application.Util
-{
-    public struct SimpleProgress
-    {
-        public float CurrentValue { get; set; }
-        public float TargetValue { get; set; }
-        public bool Finished { get; set; }
+﻿namespace CurrencyFetcher.Application.Util;
 
-        public SimpleProgress(float currentValue, float targetValue)
-        {
-            CurrentValue = currentValue;
-            TargetValue = targetValue;
-        }
+public struct SimpleProgress
+{
+    public float CurrentValue { get; set; }
+    public float TargetValue { get; set; }
+    public bool Finished { get; set; }
+
+    public SimpleProgress(float currentValue, float targetValue)
+    {
+        CurrentValue = currentValue;
+        TargetValue = targetValue;
     }
 }

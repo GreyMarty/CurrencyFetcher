@@ -24,8 +24,7 @@ public partial class ProgressBox : Window
         InitializeComponent();
     }
 
-    public static bool? ExecuteTask(Func<IProgress<SimpleProgress>, CancellationToken, Task> doWork,
-        Window? owner = null)
+    public static bool? ExecuteTask(Func<IProgress<SimpleProgress>, CancellationToken, Task> doWork, Window? owner = null)
     {
         var dialog = new ProgressBox(doWork);
         dialog.Owner = owner;

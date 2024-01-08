@@ -1,7 +1,6 @@
-﻿namespace CurrencyFetcher.Application.Services.Optimization
+﻿namespace CurrencyFetcher.Application.Services.Optimization;
+
+public interface IStringPool
 {
-    public interface IStringPool
-    {
-        public string GetOrAdd(string value);
-    }
+    public string GetOrAdd(string value);
 }
