@@ -156,6 +156,7 @@
     <Compile Include="Services\FileDialogServiceBase.cs" />
     <Compile Include="Services\OpenFileDialogService.cs" />
     <Compile Include="Services\SaveFileDialogServiceService.cs" />
+    <Compile Include="ViewModels\CurrencyRateSeriesViewModel.cs" />
     <Compile Include="ViewModels\ProgressBoxViewModel.cs" />
     <Compile Include="Views\ProgressBox.xaml.cs">
       <DependentUpon>ProgressBox.xaml</DependentUpon>

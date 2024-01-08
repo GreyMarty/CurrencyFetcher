@@ -136,7 +136,80 @@
                 </telerik:RadTabItem>
                 <telerik:RadTabItem
                     FontSize="14"
-                    Header="График" />
+                    Header="График">
+                    <Grid>
+                        <telerik:RadCartesianChart
+                            x:Name="Chart"
+                            Palette="Arctic"
+                            HoverMode="FadeOtherSeries">
+                            <telerik:RadCartesianChart.Resources>
+                                <DataTemplate x:Key="TrackBallInfoTemplate">
+                                    <Grid Margin="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock 
+                                            Margin="0,0,4,0"
+                                            FontWeight="Bold"
+                                            Text="{Binding DataPoint.Presenter.DataContext.Name}"/>
+                                        <TextBlock 
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            Text="{Binding DataPoint.Value}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </telerik:RadCartesianChart.Resources>
+                            <telerik:RadCartesianChart.Behaviors>
+                                <telerik:ChartPanAndZoomBehavior 
+                                    ZoomMode="Both"/>
+                                <telerik:ChartTrackBallBehavior />
+                                <telerik:ChartCrosshairBehavior 
+                                    HorizontalLineVisibility="Collapsed"
+                                    VerticalLineVisibility="Collapsed"/>
+                            </telerik:RadCartesianChart.Behaviors>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeCategoricalAxis
+                                    LabelFormat="yyyy-MM-dd"
+                                    LabelFitMode="Rotate"
+                                    SmartLabelsMode="SmartStep"
+                                    TickThickness="0"/>
+                            </telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis MajorStep="0.5"/>
+                            </telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:RadCartesianChart.SeriesProvider>
+                                <telerik:ChartSeriesProvider Source="{Binding RateSeries}">
+                                    <telerik:CategoricalSeriesDescriptor 
+                                        CategoryPath="Date"
+                                        ValuePath="OfficialRateScaled"
+                                        ItemsSourcePath="Items"
+                                        TypePath="Type">
+                                        <telerik:CategoricalSeriesDescriptor.Style>
+                                            <Style TargetType="telerik:LineSeries">
+                                                <Setter Property="TrackBallInfoTemplate" Value="{StaticResource TrackBallInfoTemplate}"/>
+                                                <Setter Property="LegendSettings">
+                                                    <Setter.Value>
+                                                        <telerik:SeriesLegendSettings Title="{Binding Name}" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </telerik:CategoricalSeriesDescriptor.Style>
+                                    </telerik:CategoricalSeriesDescriptor>
+                                </telerik:ChartSeriesProvider>
+                            </telerik:RadCartesianChart.SeriesProvider>
+                        </telerik:RadCartesianChart>
+                        <ScrollViewer
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            VerticalScrollBarVisibility="Auto"
+                            MaxHeight="300">
+                            <telerik:RadLegend
+                                Margin="8"
+                                Items="{Binding LegendItems, ElementName=Chart}"/>
+                        </ScrollViewer>
+                    </Grid>
+                </telerik:RadTabItem>
             </telerik:RadTabControl.Items>
         </telerik:RadTabControl>
     </DockPanel>

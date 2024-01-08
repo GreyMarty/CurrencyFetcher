@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,6 +11,7 @@ using CurrencyFetcher.Application.Services;
 using CurrencyFetcher.Application.Util;
 using CurrencyFetcher.Services;
 using Telerik.Windows.Controls;
+using Telerik.Windows.Controls.ChartView;
 
 namespace CurrencyFetcher.ViewModels;
 
@@ -100,6 +103,9 @@ internal class CurrencyRatesViewModel : INotifyPropertyChanged
     public DateTime MaxDateTo { get; } = DateTime.Now;
 
     public IReadOnlyList<CurrencyRate> Rates { get; set; } = Array.Empty<CurrencyRate>();
+    public IEnumerable<CurrencyRateSeriesViewModel> RateSeries => Rates
+        .GroupBy(r => r.Abbreviation)
+        .Select(g => new CurrencyRateSeriesViewModel(typeof(LineSeries), g.Key, g));
 
     public string? ActiveFile { get; set; }
     public bool CanSaveChanges => !string.IsNullOrEmpty(ActiveFile);

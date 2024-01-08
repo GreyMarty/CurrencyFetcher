@@ -86,7 +86,7 @@ namespace CurrencyFetcher.Application.Services
                     semaphore.Release();
                     progressValue.CurrentValue++;
                     progress?.Report(progressValue);
-                }, cancellationToken);
+                });
 
                 tasks.Add(task);
             }

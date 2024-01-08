@@ -10,5 +10,6 @@ namespace CurrencyFetcher.Application.Models
         [JsonPropertyName("Cur_Name")] public string Name { get; set; } = default!;
         [JsonPropertyName("Cur_OfficialRate")] public decimal? OfficialRate { get; set; }
         [JsonPropertyName("Cur_Scale")] public decimal Scale { get; set; }
+        [JsonIgnore] public decimal? OfficialRateScaled => OfficialRate / Scale;
     }
 }
